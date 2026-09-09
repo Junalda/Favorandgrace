@@ -1,0 +1,303 @@
+---
+import BrandMark from './ui/BrandMark.astro';
+import { anchors, navItems } from '../data/navigation';
+import { getCopy, type Locale } from '../i18n';
+import { brand, contact, legal, organisation, socialLinks } from '../data/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+const year = new Date().getFullYear();
+const foundation = organisation.foundation;
+const dayProgramme = organisation.dayProgramme;
+
+const legalLinks = [
+  legal.privacyUrl ? { href: legal.privacyUrl, label: copy.footer.privacy } : null,
+  legal.cookieUrl && legal.usesTrackingCookies
+    ? { href: legal.cookieUrl, label: copy.footer.cookies }
+    : null,
+  legal.termsUrl ? { href: legal.termsUrl, label: copy.footer.terms } : null,
+].filter((link): link is { href: string; label: string } => link !== null);
+
+const hasFoundationColumn = Boolean(
+  foundation.legalName || foundation.kvk || foundation.anbi || foundation.donationUrl,
+);
+---
+
+<footer class="site-footer" data-ground="dark">
+  <div class="site-footer__inner container container--wide">
+    <div class="site-footer__brand">
+      <BrandMark tone="dark" size="lg" />
+      <p class="site-footer__blurb">{copy.footer.blurb}</p>
+
+      {
+        socialLinks.length > 0 && (
+          <nav class="site-footer__social" aria-label={copy.footer.socialTitle}>
+            <ul>
+              {socialLinks.map((link) => (
+                <li>
+                  <a href={link.href} target="_blank" rel="noopener noreferrer">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+    </div>
+
+    <nav class="site-footer__col" aria-label={copy.footer.navTitle}>
+      <h2 class="site-footer__title">{copy.footer.navTitle}</h2>
+      <ul>
+        {
+          navItems.map((item) => (
+            <li>
+              <a href={`#${item.id}`}>{copy.nav.items[item.labelKey]}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="site-footer__col">
+      <h2 class="site-footer__title">{copy.footer.contactTitle}</h2>
+      <ul>
+        {
+          contact.phone && (
+            <li>
+              <a href={`tel:${contact.phone.href}`}>{contact.phone.display}</a>
+            </li>
+          )
+        }
+        {
+          contact.email && (
+            <li>
+              <a href={`mailto:${contact.email}`}>{contact.email}</a>
+            </li>
+          )
+        }
+        {
+          contact.address && (
+            <li>
+              <address>
+                {contact.address.street}
+                <br />
+                {contact.address.postalCode} {contact.address.city}
+              </address>
+            </li>
+          )
+        }
+        <li><a href={anchors.contact}>{copy.nav.cta}</a></li>
+      </ul>
+
+      {
+        dayProgramme.kvk && (
+          <p class="site-footer__meta">
+            {brand.name} · KvK {dayProgramme.kvk}
+          </p>
+        )
+      }
+    </div>
+
+    {
+      /* The foundation is a separate legal entity; its details never mix with
+         the day programme's. The column appears only when it has content. */
+      hasFoundationColumn && (
+        <div class="site-footer__col">
+          <h2 class="site-footer__title">{copy.footer.foundationTitle}</h2>
+          <ul>
+            <li>{foundation.legalName ?? brand.foundationName}</li>
+            {foundation.kvk && <li>KvK {foundation.kvk}</li>}
+            {foundation.anbi && <li>RSIN {foundation.anbi.rsin} · ANBI</li>}
+            {foundation.donationUrl && (
+              <li>
+                <a href={foundation.donationUrl} target="_blank" rel="noopener noreferrer">
+                  {copy.foundation.paths[2]?.cta}
+                </a>
+              </li>
+            )}
+          </ul>
+        </div>
+      )
+    }
+  </div>
+
+  <div class="site-footer__bottom">
+    <div class="container container--wide">
+      <p class="site-footer__legal-note">{copy.footer.separationNote}</p>
+      <div class="site-footer__bar">
+        <p class="site-footer__copyright">{copy.footer.copyright(year)}</p>
+        {
+          legalLinks.length > 0 && (
+            <nav aria-label={copy.footer.legalTitle}>
+              <ul class="site-footer__legal">
+                {legalLinks.map((link) => (
+                  <li>
+                    <a href={link.href}>{link.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )
+        }
+        <a class="site-footer__top" href="#top">
+          {copy.footer.backToTop}
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path
+              d="M10 16V4m0 0L5 9m5-5 5 5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background-color: var(--color-ink-deep);
+    color: var(--color-text);
+  }
+
+  .site-footer__inner {
+    display: grid;
+    gap: var(--space-xl);
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .site-footer__blurb {
+    margin: var(--space-md) 0 0;
+    color: var(--color-muted);
+    max-inline-size: 38ch;
+  }
+
+  .site-footer__title {
+    margin: 0 0 var(--space-sm);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-on-dark-muted);
+  }
+
+  .site-footer ul {
+    display: grid;
+    gap: var(--space-2xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-footer li,
+  .site-footer address {
+    color: var(--color-on-dark-muted);
+    font-style: normal;
+  }
+
+  .site-footer a {
+    color: var(--color-on-dark);
+    text-decoration: none;
+  }
+
+  .site-footer a:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.22em;
+  }
+
+  .site-footer__social ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-block-start: var(--space-lg);
+  }
+
+  .site-footer__meta {
+    margin: var(--space-md) 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-on-dark-muted);
+  }
+
+  .site-footer__bottom {
+    border-block-start: 1px solid var(--color-on-dark-border);
+    padding-block: var(--space-md) calc(var(--space-md) + env(safe-area-inset-bottom));
+  }
+
+  .site-footer__legal-note {
+    margin: 0 0 var(--space-sm);
+    font-size: var(--text-sm);
+    color: var(--color-on-dark-muted);
+    max-inline-size: 62ch;
+  }
+
+  .site-footer__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm) var(--space-lg);
+    font-size: var(--text-sm);
+  }
+
+  .site-footer__copyright {
+    margin: 0;
+    color: var(--color-on-dark-muted);
+  }
+
+  .site-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm) var(--space-md);
+  }
+
+  .site-footer__top {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    margin-inline-start: auto;
+    padding-block: var(--space-2xs);
+    font-weight: var(--weight-semibold);
+  }
+
+  .site-footer__top svg {
+    inline-size: 1.1rem;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .site-footer__top:hover svg {
+    transform: translateY(-2px);
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer__inner {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-xl);
+    }
+
+    .site-footer__brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 62rem) {
+    .site-footer__inner {
+      /* auto-fit rather than a fixed count: the foundation column only
+         exists once it has content, and the row must not leave a hole. */
+      grid-template-columns: minmax(0, 1.7fr) repeat(auto-fit, minmax(10rem, 1fr));
+      column-gap: var(--space-2xl);
+      padding-block: var(--space-3xl) var(--space-2xl);
+    }
+
+    .site-footer__brand {
+      grid-column: auto;
+    }
+  }
+</style>

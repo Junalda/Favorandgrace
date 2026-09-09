@@ -1,0 +1,174 @@
+---
+import Button from './ui/Button.astro';
+import { anchors } from '../data/navigation';
+import { getCopy, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+---
+
+<section
+  class="referral section"
+  id="aanmelden"
+  data-ground="dark"
+  aria-labelledby="referral-title"
+>
+  <div class="referral__inner container container--wide">
+    <div class="referral__lead-col">
+      <p class="eyebrow referral__eyebrow">{copy.referral.eyebrow}</p>
+      <h2 class="referral__title" id="referral-title">{copy.referral.title}</h2>
+      <p class="referral__lead">{copy.referral.lead}</p>
+
+      <div class="referral__actions">
+        <Button href={anchors.contact} size="lg" variant="inverse">
+          {copy.referral.primaryCta}
+        </Button>
+        <Button href={anchors.contact} size="lg" variant="inverse-outline">
+          {copy.referral.secondaryCta}
+        </Button>
+      </div>
+    </div>
+
+    <div class="referral__steps-col" data-reveal style="--reveal-delay: 90ms">
+      <h3 class="referral__steps-title">{copy.referral.stepsTitle}</h3>
+      <ol class="referral__steps">
+        {
+          copy.referral.steps.map((step, index) => (
+            <li class="referral__step">
+              <span class="referral__step-number" aria-hidden="true">
+                {index + 1}
+              </span>
+              <div>
+                <h4 class="referral__step-title">{step.title}</h4>
+                <p class="referral__step-body">{step.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .referral {
+    background-color: var(--color-primary-deep);
+    color: var(--color-text);
+    background-image: radial-gradient(
+      80% 60% at 92% 0%,
+      rgba(224, 160, 53, 0.2) 0%,
+      rgba(224, 160, 53, 0) 60%
+    );
+  }
+
+  .referral__inner {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .referral__eyebrow {
+    color: var(--color-accent-soft);
+  }
+
+  .referral__title {
+    margin: var(--space-md) 0 0;
+    max-inline-size: 17ch;
+  }
+
+  .referral__lead {
+    margin: var(--space-md) 0 0;
+    font-size: var(--text-md);
+    color: var(--color-on-dark-muted);
+    max-inline-size: 46ch;
+  }
+
+  .referral__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-block-start: var(--space-lg);
+  }
+
+  .referral__steps-title {
+    margin: 0 0 var(--space-md);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-on-dark-muted);
+  }
+
+  .referral__steps {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .referral__step {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-md);
+    padding-block: var(--space-md);
+  }
+
+  /* A rail linking the numbers turns three items into one process. */
+  .referral__step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    inset-block: calc(var(--space-md) + 2.75rem) 0;
+    inset-inline-start: 1.375rem;
+    inline-size: 1px;
+    background-color: var(--color-on-dark-border);
+  }
+
+  .referral__step-number {
+    display: grid;
+    place-items: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 50%;
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: var(--weight-semibold);
+    color: var(--color-accent-soft);
+    background-color: var(--color-primary-deep);
+  }
+
+  .referral__step-title {
+    margin: 0.35rem 0 var(--space-3xs);
+    font-size: var(--text-md);
+    color: var(--color-on-dark);
+  }
+
+  .referral__step-body {
+    margin: 0;
+    color: var(--color-on-dark-muted);
+    max-inline-size: 42ch;
+  }
+
+  @media (min-width: 62rem) {
+    .referral__inner {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gap-col);
+      align-items: start;
+    }
+
+    .referral__lead-col {
+      grid-column: 1 / span 6;
+    }
+
+    .referral__steps-col {
+      grid-column: 8 / span 5;
+      padding-block-start: var(--space-2xs);
+    }
+  }
+</style>

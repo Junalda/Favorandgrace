@@ -1,0 +1,125 @@
+---
+import Picture from './ui/Picture.astro';
+import SectionIntro from './ui/SectionIntro.astro';
+import { getCopy, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+
+/**
+ * Each frame carries its own crop and its own place in the grid. The variation
+ * is the point: a set of identical squares would flatten six different kinds
+ * of moment into one shape.
+ */
+const frames = [
+  { ratio: '3 / 2', tone: 'sand' },
+  { ratio: '4 / 5', tone: 'teal' },
+  { ratio: '4 / 5', tone: 'sand' },
+  { ratio: '16 / 10', tone: 'sand' },
+  { ratio: '16 / 9', tone: 'sand' },
+  { ratio: '4 / 5', tone: 'terracotta' },
+] as const;
+---
+
+<section class="gallery section" aria-labelledby="gallery-title">
+  <div class="container container--wide">
+    <SectionIntro
+      eyebrow={copy.gallery.eyebrow}
+      title={copy.gallery.title}
+      lead={copy.gallery.lead}
+      id="gallery-title"
+      align="center"
+      class="gallery__intro"
+    />
+
+    <div class="gallery__grid">
+      {
+        copy.gallery.items.map((item, index) => (
+          <div
+            class="gallery__frame"
+            data-frame={index + 1}
+            data-reveal
+            style={`--reveal-delay: ${Math.min(index, 3) * 80}ms`}
+          >
+            <Picture
+              slotLabel={item.slot}
+              alt={item.alt}
+              ratio={frames[index]?.ratio ?? '3 / 2'}
+              tone={frames[index]?.tone ?? 'sand'}
+              sizes="(max-width: 48rem) 92vw, (max-width: 62rem) 46vw, 45vw"
+              widths={[420, 640, 900, 1280, 1600]}
+            />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .gallery {
+    background-color: var(--color-background);
+  }
+
+  .gallery__intro {
+    margin-block-end: var(--space-xl);
+  }
+
+  .gallery__grid {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 48rem) {
+    .gallery__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-lg);
+      align-items: start;
+    }
+
+    .gallery__frame[data-frame='1'],
+    .gallery__frame[data-frame='5'] {
+      grid-column: span 2;
+    }
+  }
+
+  @media (min-width: 62rem) {
+    .gallery__intro {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .gallery__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gap-col);
+      row-gap: var(--space-xl);
+    }
+
+    /* Three rows, each with a different rhythm. Offsets are positive only, so
+       a tall frame can never overlap the row above it. */
+    .gallery__frame[data-frame='1'] {
+      grid-column: 1 / span 7;
+    }
+    .gallery__frame[data-frame='2'] {
+      grid-column: 8 / span 5;
+      margin-block-start: var(--space-2xl);
+    }
+    .gallery__frame[data-frame='3'] {
+      grid-column: 1 / span 5;
+    }
+    .gallery__frame[data-frame='4'] {
+      grid-column: 6 / span 7;
+      margin-block-start: var(--space-lg);
+    }
+    .gallery__frame[data-frame='5'] {
+      grid-column: 1 / span 8;
+    }
+    .gallery__frame[data-frame='6'] {
+      grid-column: 9 / span 4;
+      margin-block-start: var(--space-xl);
+    }
+  }
+</style>

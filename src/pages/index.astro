@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import IntroProblem from '../components/IntroProblem.astro';
+import WhySection from '../components/WhySection.astro';
+import AudienceSection from '../components/AudienceSection.astro';
+import DayProgram from '../components/DayProgram.astro';
+import FounderStory from '../components/FounderStory.astro';
+import ImpactGallery from '../components/ImpactGallery.astro';
+import ReferralCTA from '../components/ReferralCTA.astro';
+import FoundationSection from '../components/FoundationSection.astro';
+import PartnerSection from '../components/PartnerSection.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+import ContactSection from '../components/ContactSection.astro';
+
+const locale = 'nl' as const;
+---
+
+<Layout locale={locale}>
+  <Hero locale={locale} />
+  <IntroProblem locale={locale} />
+  <WhySection locale={locale} />
+  <AudienceSection locale={locale} />
+  <DayProgram locale={locale} />
+  <FounderStory locale={locale} />
+  <ImpactGallery locale={locale} />
+  <ReferralCTA locale={locale} />
+  <FoundationSection locale={locale} />
+  <PartnerSection locale={locale} />
+  <FinalCTA locale={locale} />
+  <ContactSection locale={locale} />
+</Layout>

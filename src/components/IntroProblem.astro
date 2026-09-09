@@ -1,0 +1,124 @@
+---
+import Picture from './ui/Picture.astro';
+import { getCopy, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+---
+
+<section class="intro-problem section" id="over-ons" aria-labelledby="intro-title">
+  <div class="intro-problem__grid container container--wide">
+    <div class="intro-problem__head" data-reveal>
+      <p class="eyebrow">{copy.intro.eyebrow}</p>
+      <h2 class="intro-problem__title" id="intro-title">{copy.intro.title}</h2>
+    </div>
+
+    <div class="intro-problem__body prose" data-reveal style="--reveal-delay: 90ms">
+      {copy.intro.body.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+
+    <blockquote class="intro-problem__quote" data-reveal>
+      <p>{copy.intro.pullQuote}</p>
+    </blockquote>
+  </div>
+
+  <div class="intro-problem__media container container--wide" data-reveal>
+    <Picture
+      slotLabel={copy.intro.imageSlot}
+      alt={copy.intro.imageAlt}
+      ratio="16 / 7"
+      sizes="(max-width: 62rem) 100vw, 90vw"
+      widths={[640, 960, 1280, 1600, 2000]}
+    />
+  </div>
+</section>
+
+<style>
+  .intro-problem {
+    background-color: var(--color-background);
+  }
+
+  .intro-problem__grid {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .intro-problem__title {
+    margin: var(--space-md) 0 0;
+    max-inline-size: 18ch;
+  }
+
+  .intro-problem__body {
+    font-size: var(--text-md);
+    color: var(--color-muted);
+    max-inline-size: var(--measure);
+  }
+
+  /* The quote is the section's argument in one line: full display scale,
+     framed by rules rather than quotation marks. */
+  .intro-problem__quote {
+    margin: var(--space-md) 0 0;
+    padding-block: var(--space-lg);
+    border-block: 1px solid var(--color-border);
+  }
+
+  .intro-problem__quote p {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tight);
+    text-wrap: balance;
+    color: var(--color-primary-ink);
+    max-inline-size: 24ch;
+  }
+
+  .intro-problem__media {
+    margin-block-start: var(--space-xl);
+  }
+
+  @media (min-width: 62rem) {
+    .intro-problem__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gap-col);
+      row-gap: var(--space-2xl);
+    }
+
+    .intro-problem__head {
+      grid-column: 1 / span 6;
+    }
+
+    /* The body sits low and to the right: the eye lands on the statement
+       first and the explanation second. */
+    .intro-problem__body {
+      grid-column: 8 / span 5;
+      align-self: end;
+      padding-block-end: var(--space-2xs);
+    }
+
+    .intro-problem__quote {
+      grid-column: 1 / span 12;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      margin-block-start: 0;
+      padding-block: var(--space-xl);
+    }
+
+    .intro-problem__quote p {
+      grid-column: 3 / span 8;
+      font-size: var(--text-2xl);
+      max-inline-size: 26ch;
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .intro-problem__media {
+      margin-block-start: var(--space-2xl);
+    }
+  }
+</style>

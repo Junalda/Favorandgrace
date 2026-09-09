@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Favour &amp; Grace">
+  <rect width="64" height="64" rx="14" fill="#fbf6ee"/>
+  <g fill="none" stroke-linecap="round" stroke-width="4">
+    <g stroke="#e0a035">
+      <path d="M32 16.5v-6"/>
+      <path d="M46 21.5 50 17.5"/>
+      <path d="M18 21.5 14 17.5"/>
+      <path d="M17 39a15 15 0 0 1 30 0"/>
+    </g>
+    <path d="M8 51c6.6-8.6 14.6-13 24-13s17.4 4.4 24 13" stroke="#b4432a"/>
+  </g>
+</svg>

@@ -1,0 +1,221 @@
+---
+import Button from './ui/Button.astro';
+import BrandMark from './ui/BrandMark.astro';
+import { anchors, navItems } from '../data/navigation';
+import { getCopy, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+
+/**
+ * A native <dialog> in modal mode. That gives focus trapping, Escape to close
+ * and an inert background for free — all of which would otherwise be a hundred
+ * lines of fragile JavaScript.
+ */
+---
+
+<dialog id="mobile-menu" class="mobile-menu" aria-label={copy.nav.label}>
+  <div class="mobile-menu__bar">
+    <a
+      class="mobile-menu__brand"
+      href="#top"
+      aria-label={copy.nav.homeLabel}
+      data-menu-link
+    >
+      <BrandMark size="sm" />
+    </a>
+    <button
+      type="button"
+      class="mobile-menu__close"
+      data-menu-close
+      aria-label={copy.nav.closeMenu}
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M6 6l12 12M18 6L6 18"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"></path>
+      </svg>
+    </button>
+  </div>
+
+  <nav class="mobile-menu__nav" aria-label={copy.nav.label}>
+    <ul class="mobile-menu__list">
+      {
+        navItems.map((item, index) => (
+          <li style={`--i: ${index}`}>
+            <a class="mobile-menu__link" href={`#${item.id}`} data-menu-link>
+              <span class="mobile-menu__index" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              {copy.nav.items[item.labelKey]}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <div class="mobile-menu__foot">
+    <Button href={anchors.contact} size="lg" fullWidth data-menu-link>
+      {copy.nav.cta}
+    </Button>
+    <p class="mobile-menu__note">{copy.hero.note}</p>
+  </div>
+</dialog>
+
+<style>
+  .mobile-menu {
+    /* Sizing the dialog itself rather than an inner wrapper keeps the
+       backdrop edge-to-edge on every browser. */
+    inline-size: 100%;
+    max-inline-size: 100%;
+    block-size: 100%;
+    max-block-size: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+  }
+
+  .mobile-menu::backdrop {
+    background-color: rgba(28, 18, 12, 0.5);
+  }
+
+  .mobile-menu[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-menu__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    min-block-size: var(--header-height);
+    padding-inline: var(--gutter);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .mobile-menu__brand {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .mobile-menu__close {
+    display: grid;
+    place-items: center;
+    inline-size: 3rem;
+    block-size: 3rem;
+    margin-inline-end: -0.5rem;
+    border-radius: 50%;
+    color: var(--color-text);
+    transition: background-color var(--duration-fast) var(--ease-out);
+  }
+
+  .mobile-menu__close:hover {
+    background-color: var(--color-surface-sand);
+  }
+
+  .mobile-menu__close svg {
+    inline-size: 1.5rem;
+  }
+
+  .mobile-menu__nav {
+    flex: 1;
+    padding: var(--space-lg) var(--gutter);
+  }
+
+  .mobile-menu__list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    list-style: none;
+    padding: 0;
+  }
+
+  .mobile-menu__list li + li {
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .mobile-menu__link {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    padding-block: var(--space-sm);
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .mobile-menu__index {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-primary);
+  }
+
+  .mobile-menu__foot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--gutter) calc(var(--space-lg) + env(safe-area-inset-bottom));
+    border-block-start: 1px solid var(--color-border);
+    background-color: var(--color-surface-sand);
+  }
+
+  .mobile-menu__note {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    text-align: center;
+  }
+
+  /* Entrance: the panel slides up, the links stagger in behind it. */
+  @media (prefers-reduced-motion: no-preference) {
+    .mobile-menu[open] {
+      animation: menu-in var(--duration-base) var(--ease-out);
+    }
+
+    .mobile-menu[open] .mobile-menu__list li {
+      animation: link-in 340ms var(--ease-out) backwards;
+      animation-delay: calc(60ms + var(--i) * 45ms);
+    }
+  }
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 1.5rem, 0);
+    }
+  }
+
+  @keyframes link-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 0.75rem, 0);
+    }
+  }
+
+  /* Both selectors, so a resize while the menu is open cannot leave a
+     full-screen panel on a desktop viewport. The header script also closes it. */
+  @media (min-width: 62rem) {
+    .mobile-menu,
+    .mobile-menu[open] {
+      display: none;
+    }
+  }
+</style>

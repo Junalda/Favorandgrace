@@ -1,0 +1,310 @@
+---
+import Button from './ui/Button.astro';
+import BrandMark from './ui/BrandMark.astro';
+import MobileMenu from './MobileMenu.astro';
+import { anchors, navItems } from '../data/navigation';
+import { getCopy, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+---
+
+<header class="site-header" data-header>
+  <div class="site-header__inner container container--wide">
+    <a class="site-header__brand" href="#top" aria-label={copy.nav.homeLabel}>
+      <BrandMark />
+    </a>
+
+    <nav class="site-header__nav" aria-label={copy.nav.label}>
+      <ul class="site-header__list">
+        {
+          navItems.map((item) => (
+            <li>
+              <a class="site-header__link" href={`#${item.id}`} data-nav-link={item.id}>
+                {copy.nav.items[item.labelKey]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <Button href={anchors.contact} class="site-header__cta">{copy.nav.cta}</Button>
+      <button
+        type="button"
+        class="site-header__toggle"
+        data-menu-open
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+      >
+        <span class="visually-hidden">{copy.nav.openMenu}</span>
+        <span class="site-header__bars" aria-hidden="true">
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<MobileMenu locale={locale} />
+
+<style>
+  .site-header {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: var(--z-header);
+    /* Starts transparent over the hero, then earns a surface on scroll. */
+    background-color: transparent;
+    border-block-end: 1px solid transparent;
+    transition:
+      background-color var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out);
+  }
+
+  .site-header[data-scrolled='true'] {
+    background-color: color-mix(in srgb, var(--color-background) 88%, transparent);
+    border-block-end-color: var(--color-border);
+    box-shadow: 0 10px 30px -24px rgba(34, 22, 15, 0.5);
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    .site-header[data-scrolled='true'] {
+      backdrop-filter: saturate(150%) blur(14px);
+    }
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    min-block-size: var(--header-height);
+    transition: min-block-size var(--duration-base) var(--ease-out);
+  }
+
+  .site-header[data-scrolled='true'] .site-header__inner {
+    min-block-size: calc(var(--header-height) - 0.5rem);
+  }
+
+  .site-header__brand {
+    text-decoration: none;
+    color: inherit;
+    /* A tap target that does not collide with the toggle on small screens. */
+    padding-block: var(--space-2xs);
+  }
+
+  .site-header__nav {
+    display: none;
+  }
+
+  .site-header__list {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 0.4rem + 1.6vw, 2.25rem);
+    margin: 0;
+    list-style: none;
+    padding: 0;
+  }
+
+  .site-header__link {
+    position: relative;
+    display: block;
+    padding-block: var(--space-2xs);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .site-header__link::after {
+    content: '';
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    inline-size: 100%;
+    block-size: 2px;
+    border-radius: 2px;
+    background-color: var(--color-primary);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .site-header__link:hover {
+    color: var(--color-primary-ink);
+  }
+
+  .site-header__link:hover::after,
+  .site-header__link[aria-current='true']::after {
+    transform: scaleX(1);
+  }
+
+  .site-header__link[aria-current='true'] {
+    color: var(--color-primary-ink);
+  }
+
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .site-header__cta {
+    display: none;
+  }
+
+  .site-header__toggle {
+    display: grid;
+    place-items: center;
+    inline-size: 3rem;
+    block-size: 3rem;
+    margin-inline-end: -0.5rem;
+    border-radius: 50%;
+    color: var(--color-text);
+    transition: background-color var(--duration-fast) var(--ease-out);
+  }
+
+  .site-header__toggle:hover {
+    background-color: color-mix(in srgb, var(--color-surface-sand) 80%, transparent);
+  }
+
+  .site-header__bars {
+    display: grid;
+    gap: 6px;
+    inline-size: 1.375rem;
+  }
+
+  .site-header__bars span {
+    block-size: 2px;
+    border-radius: 2px;
+    background-color: currentColor;
+    transition: transform var(--duration-fast) var(--ease-out);
+  }
+
+  .site-header__toggle:hover .site-header__bars span:last-child {
+    transform: translateX(3px);
+  }
+
+  @media (min-width: 62rem) {
+    .site-header__nav,
+    .site-header__cta {
+      display: block;
+    }
+
+    .site-header__toggle {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // ---------------------------------------------------------------------------
+  // Header behaviour: scrolled state, mobile dialog, active section.
+  // Everything below degrades to a plain anchor list if it fails to run.
+  // ---------------------------------------------------------------------------
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const dialog = document.querySelector<HTMLDialogElement>('#mobile-menu');
+  const openButton = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+  const closeButton = document.querySelector<HTMLButtonElement>('[data-menu-close]');
+  const desktop = window.matchMedia('(min-width: 62rem)');
+
+  /* --- Compact header on scroll -------------------------------------------- */
+  if (header) {
+    let ticking = false;
+    const sync = () => {
+      header.dataset.scrolled = String(window.scrollY > 24);
+      ticking = false;
+    };
+    sync();
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(sync);
+      },
+      { passive: true },
+    );
+  }
+
+  /* --- Mobile menu ---------------------------------------------------------- */
+  if (dialog && openButton) {
+    const open = () => {
+      if (typeof dialog.showModal === 'function') dialog.showModal();
+      else dialog.setAttribute('open', '');
+      openButton.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    };
+
+    const close = () => {
+      if (typeof dialog.close === 'function') dialog.close();
+      else dialog.removeAttribute('open');
+    };
+
+    openButton.addEventListener('click', open);
+    closeButton?.addEventListener('click', close);
+
+    // Native close covers the Escape key and the backdrop path alike.
+    dialog.addEventListener('close', () => {
+      openButton.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      openButton.focus({ preventScroll: true });
+    });
+
+    // Clicking outside the panel closes it.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) close();
+    });
+
+    // Anchors inside a modal dialog need the dialog gone before the scroll,
+    // otherwise the browser jumps behind an inert page.
+    for (const link of dialog.querySelectorAll<HTMLAnchorElement>('[data-menu-link]')) {
+      link.addEventListener('click', () => close());
+    }
+
+    desktop.addEventListener('change', (event) => {
+      if (event.matches && dialog.open) close();
+    });
+  }
+
+  /* --- Active section in the desktop nav ------------------------------------ */
+  const navLinks = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>('[data-nav-link]'),
+  );
+
+  if (navLinks.length > 0 && 'IntersectionObserver' in window) {
+    const sections = navLinks
+      .map((link) => document.getElementById(link.dataset.navLink ?? ''))
+      .filter((section): section is HTMLElement => section !== null);
+
+    const visible = new Set<string>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target.id);
+          else visible.delete(entry.target.id);
+        }
+        // The topmost visible section wins, so the highlight never flickers
+        // between two sections that overlap the viewport.
+        const active = sections.find((section) => visible.has(section.id))?.id;
+        for (const link of navLinks) {
+          if (link.dataset.navLink === active) link.setAttribute('aria-current', 'true');
+          else link.removeAttribute('aria-current');
+        }
+      },
+      { rootMargin: '-30% 0px -55% 0px' },
+    );
+
+    for (const section of sections) observer.observe(section);
+  }
+</script>

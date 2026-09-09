@@ -1,0 +1,195 @@
+---
+import Picture from './ui/Picture.astro';
+import SectionIntro from './ui/SectionIntro.astro';
+import { getCopy, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+
+/** Portrait, landscape, portrait — the rhythm of the row comes from the crops. */
+const ratios = ['4 / 5', '5 / 4', '4 / 5'];
+---
+
+<section class="day section" id="dagbesteding" aria-labelledby="day-title">
+  <div class="container container--wide">
+    <SectionIntro
+      eyebrow={copy.programme.eyebrow}
+      title={copy.programme.title}
+      lead={copy.programme.lead}
+      id="day-title"
+      class="day__intro"
+    />
+
+    <ol class="day__moments">
+      {
+        copy.programme.moments.map((moment, index) => (
+          <li
+            class="day__moment"
+            data-reveal
+            style={`--reveal-delay: ${index * 90}ms`}
+          >
+            <div class="day__media">
+              <Picture
+                slotLabel={moment.imageSlot}
+                alt={moment.imageAlt}
+                ratio={ratios[index] ?? '4 / 5'}
+                sizes="(max-width: 48rem) 92vw, (max-width: 62rem) 46vw, 30vw"
+                widths={[420, 640, 900, 1200]}
+              />
+              <p class="day__time">{moment.time}</p>
+            </div>
+            <h3 class="day__moment-title">{moment.title}</h3>
+            <p class="day__moment-body">{moment.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="day__activities" data-reveal>
+      <h3 class="day__activities-title">{copy.programme.activitiesTitle}</h3>
+      <ul class="day__tags">
+        {copy.programme.activities.map((activity) => <li>{activity}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .day {
+    background-color: var(--color-surface-sand);
+  }
+
+  .day__intro {
+    margin-block-end: var(--space-xl);
+  }
+
+  .day__moments {
+    display: grid;
+    gap: var(--space-xl);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: moment;
+  }
+
+  .day__moment {
+    display: grid;
+    gap: var(--space-sm);
+    align-content: start;
+  }
+
+  .day__media {
+    position: relative;
+    margin-block-end: var(--space-2xs);
+  }
+
+  /* The time sits on the image rather than above the heading, so the eye
+     reads picture, moment, then explanation. */
+  .day__time {
+    position: absolute;
+    inset-block-end: var(--space-sm);
+    inset-inline-start: var(--space-sm);
+    margin: 0;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-background);
+    color: var(--color-primary-ink);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .day__moment-title {
+    margin: 0;
+    font-size: var(--text-lg);
+  }
+
+  .day__moment-body {
+    margin: 0;
+    color: var(--color-muted);
+    max-inline-size: 44ch;
+  }
+
+  .day__activities {
+    display: grid;
+    gap: var(--space-md);
+    margin-block-start: var(--space-2xl);
+    padding-block-start: var(--space-lg);
+    border-block-start: 1px solid var(--color-border-strong);
+  }
+
+  .day__activities-title {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .day__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-lg);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .day__tags li {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+  }
+
+  /* Set in the display face and separated by space alone. Rules were tried
+     and dropped: they reappear at the start of every wrapped row. */
+  .day__tags li {
+    color: var(--color-text);
+  }
+
+  @media (max-width: 61.999rem) {
+    .day__media :global(.pic) {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  @media (min-width: 62rem) {
+    .day__intro {
+      margin-block-end: var(--space-2xl);
+    }
+
+    .day__moments {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-lg);
+      align-items: start;
+    }
+
+    /* Staggered baselines: the row reads as a composition, not a card set. */
+    .day__moment:nth-child(2) {
+      margin-block-start: var(--space-2xl);
+    }
+
+    .day__moment:nth-child(3) {
+      margin-block-start: var(--space-lg);
+    }
+
+    .day__activities {
+      grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+      gap: var(--space-lg);
+      align-items: baseline;
+    }
+
+    .day__activities-title {
+      padding-block-start: 0.35rem;
+    }
+  }
+</style>

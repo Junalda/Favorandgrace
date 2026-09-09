@@ -1,0 +1,131 @@
+---
+import { brand } from '../../data/site';
+
+/**
+ * The wordmark.
+ *
+ * If `brand.logo` is configured the supplied artwork is used. Until then this
+ * renders a typographic lockup that is a deliberate design in its own right,
+ * not a broken-image fallback: a sun-over-horizon mark drawn from the brand's
+ * palette, plus the name set in the display face.
+ */
+interface Props {
+  /** 'dark' for use on the deep grounds. */
+  tone?: 'light' | 'dark';
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const { tone = 'light', size = 'md', class: className } = Astro.props;
+const { nameParts, name } = brand;
+---
+
+<span class:list={['brand', `brand--${tone}`, `brand--${size}`, className]}>
+  {
+    brand.logo ? (
+      <img
+        src={brand.logo.src}
+        width={brand.logo.width}
+        height={brand.logo.height}
+        alt={name}
+        class="brand__logo"
+      />
+    ) : (
+      <>
+        <svg class="brand__mark" viewBox="0 0 40 34" aria-hidden="true" focusable="false">
+          <g fill="none" stroke-linecap="round" stroke-width="2.6">
+            <g stroke="var(--mark-accent)">
+              <path d="M20 6.6V2.4" />
+              <path d="M29.6 10.4 32.6 7.4" />
+              <path d="M10.4 10.4 7.4 7.4" />
+            </g>
+            <path
+              d="M8.4 22a11.6 11.6 0 0 1 23.2 0"
+              stroke="var(--mark-accent)"
+            />
+            <path
+              d="M2.6 30.4c4.6-6.4 10.4-9.6 17.4-9.6s12.8 3.2 17.4 9.6"
+              stroke="var(--mark-primary)"
+            />
+          </g>
+        </svg>
+        <span class="brand__word">
+          <span class="brand__first">{nameParts.first}</span>
+          <span class="brand__amp" aria-hidden="true">{nameParts.connector}</span>
+          <span class="visually-hidden">&nbsp;en&nbsp;</span>
+          <span class="brand__second">{nameParts.second}</span>
+        </span>
+      </>
+    )
+  }
+</span>
+
+<style>
+  .brand {
+    --mark-accent: var(--color-accent);
+    --mark-primary: var(--color-primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    font-family: var(--font-display);
+    font-size: var(--brand-size, 1.375rem);
+    font-weight: var(--weight-semibold);
+    letter-spacing: -0.015em;
+    line-height: 1;
+    color: var(--color-text);
+    white-space: nowrap;
+  }
+
+  .brand--sm {
+    --brand-size: 1.125rem;
+  }
+  .brand--md {
+    --brand-size: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem);
+  }
+  .brand--lg {
+    --brand-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.125rem);
+  }
+
+  .brand--dark {
+    --mark-primary: var(--color-accent-soft);
+    color: var(--color-on-dark);
+  }
+
+  .brand__mark {
+    inline-size: 1.75em;
+    block-size: auto;
+    flex: none;
+    overflow: visible;
+  }
+
+  .brand__logo {
+    block-size: 2.25em;
+    inline-size: auto;
+  }
+
+  .brand__word {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.24em;
+  }
+
+  .brand__amp {
+    font-weight: var(--weight-regular);
+    color: var(--color-primary);
+    /* Slightly smaller and lifted so the ampersand reads as a connector
+       rather than a third word. */
+    font-size: 0.9em;
+  }
+
+  .brand--dark .brand__amp {
+    color: var(--color-accent);
+  }
+
+  .brand__second {
+    color: var(--color-secondary-ink);
+  }
+
+  .brand--dark .brand__second {
+    color: var(--color-on-dark);
+  }
+</style>

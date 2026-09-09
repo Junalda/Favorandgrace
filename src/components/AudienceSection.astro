@@ -1,0 +1,200 @@
+---
+import Button from './ui/Button.astro';
+import SectionIntro from './ui/SectionIntro.astro';
+import { anchors } from '../data/navigation';
+import { getCopy, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+---
+
+<section class="audience section" id="voor-wie" aria-labelledby="audience-title">
+  <div class="audience__inner container container--wide">
+    <div class="audience__main">
+      <SectionIntro
+        eyebrow={copy.audience.eyebrow}
+        title={copy.audience.title}
+        lead={copy.audience.lead}
+        id="audience-title"
+      />
+
+      <div class="audience__situations" data-reveal>
+        <h3 class="audience__subtitle">{copy.audience.situationsTitle}</h3>
+        <ul class="audience__list">
+          {
+            copy.audience.situations.map((situation) => (
+              <li class="audience__item">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    d="M4 12.8 9.2 18 20 6.6"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <span>{situation}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <aside class="audience__aside" data-reveal style="--reveal-delay: 120ms">
+      <h3 class="audience__aside-title">{copy.audience.supportTitle}</h3>
+      <p class="audience__aside-body">{copy.audience.supportBody}</p>
+
+      <ul class="audience__groups">
+        {copy.audience.supportGroups.map((group) => <li>{group}</li>)}
+      </ul>
+
+      <Button href={anchors.contact} size="lg" fullWidth>{copy.audience.cta}</Button>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .audience {
+    background-color: var(--color-background);
+  }
+
+  .audience__inner {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .audience__main {
+    display: grid;
+    gap: var(--space-xl);
+    align-content: start;
+  }
+
+  .audience__subtitle,
+  .audience__aside-title {
+    margin: 0 0 var(--space-sm);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .audience__list {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .audience__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding-block: var(--space-sm);
+    border-block-start: 1px solid var(--color-border);
+    font-size: var(--text-md);
+  }
+
+  .audience__item:last-child {
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .audience__item svg {
+    inline-size: 1.4rem;
+    flex: none;
+    margin-block-start: 0.28em;
+    color: var(--color-secondary);
+  }
+
+  /* --- The aside is a distinct surface: the same content family, addressed
+     to a different reader. --- */
+  .audience__aside {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface-sand);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .audience__aside-body {
+    margin: 0;
+    color: var(--color-muted);
+  }
+
+  .audience__groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .audience__groups li {
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-pill);
+    background-color: rgba(255, 255, 255, 0.5);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+  }
+
+  @media (min-width: 48rem) {
+    .audience__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-lg);
+    }
+
+    /* With two columns the bottom rule belongs to the last item of each
+       column, not just the final list item. */
+    .audience__item:nth-last-child(-n + 2) {
+      border-block-end: 1px solid var(--color-border);
+    }
+
+    .audience__aside {
+      padding: var(--space-xl);
+    }
+  }
+
+  @media (min-width: 62rem) {
+    .audience__inner {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gap-col);
+      align-items: start;
+    }
+
+    .audience__main {
+      grid-column: 1 / span 7;
+    }
+
+    .audience__aside {
+      grid-column: 9 / span 4;
+      position: sticky;
+      inset-block-start: calc(var(--header-height) + var(--space-lg));
+    }
+
+    .audience__list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .audience__item:nth-last-child(-n + 2) {
+      border-block-end: none;
+    }
+
+    .audience__item:last-child {
+      border-block-end: 1px solid var(--color-border);
+    }
+  }
+</style>

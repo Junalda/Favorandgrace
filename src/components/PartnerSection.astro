@@ -1,0 +1,151 @@
+---
+import Button from './ui/Button.astro';
+import { anchors } from '../data/navigation';
+import { getCopy, type Locale } from '../i18n';
+import { partners } from '../data/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+const hasPartners = partners.length > 0;
+---
+
+<section class="partners section section--tight" aria-labelledby="partners-title">
+  <div class="container container--wide">
+    <div class="partners__inner" data-reveal>
+      <div class="partners__head">
+        <p class="eyebrow">{copy.partners.eyebrow}</p>
+        <h2 class="partners__title" id="partners-title">
+          {hasPartners ? copy.partners.titleWithPartners : copy.partners.titleEmpty}
+        </h2>
+      </div>
+
+      {
+        /* No placeholder logos, ever. Until real partners give permission the
+           section makes an invitation instead of a claim. */
+        hasPartners ? (
+          <ul class="partners__logos">
+            {partners.map((partner) =>
+              partner.logo ? (
+                <li>
+                  {partner.href ? (
+                    <a href={partner.href} target="_blank" rel="noopener noreferrer">
+                      <img
+                        src={partner.logo.src}
+                        width={partner.logo.width}
+                        height={partner.logo.height}
+                        alt={partner.name}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </a>
+                  ) : (
+                    <img
+                      src={partner.logo.src}
+                      width={partner.logo.width}
+                      height={partner.logo.height}
+                      alt={partner.name}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
+                </li>
+              ) : (
+                <li class="partners__name">{partner.name}</li>
+              ),
+            )}
+          </ul>
+        ) : (
+          <div class="partners__invite">
+            <p>{copy.partners.body}</p>
+            <Button href={anchors.contact} variant="secondary">
+              {copy.partners.cta}
+            </Button>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .partners {
+    background-color: var(--color-background);
+  }
+
+  .partners__inner {
+    display: grid;
+    gap: var(--space-lg);
+    padding-block: var(--space-lg);
+    border-block: 1px solid var(--color-border);
+  }
+
+  .partners__title {
+    margin: var(--space-xs) 0 0;
+    font-size: var(--text-lg);
+    max-inline-size: 24ch;
+  }
+
+  .partners__invite {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-md);
+  }
+
+  .partners__invite p {
+    margin: 0;
+    color: var(--color-muted);
+    max-inline-size: 54ch;
+  }
+
+  .partners__logos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-lg) var(--space-xl);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .partners__logos img {
+    block-size: auto;
+    max-block-size: 2.75rem;
+    inline-size: auto;
+    opacity: 0.7;
+    filter: grayscale(1);
+    transition:
+      opacity var(--duration-base) var(--ease-out),
+      filter var(--duration-base) var(--ease-out);
+  }
+
+  .partners__logos a:hover img,
+  .partners__logos a:focus-visible img {
+    opacity: 1;
+    filter: none;
+  }
+
+  .partners__name {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    color: var(--color-muted);
+  }
+
+  @media (min-width: 62rem) {
+    .partners__inner {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: var(--space-2xl);
+      align-items: center;
+      padding-block: var(--space-xl);
+    }
+
+    .partners__invite {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+  }
+</style>

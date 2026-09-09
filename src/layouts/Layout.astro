@@ -1,0 +1,170 @@
+---
+import '../styles/global.css';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { getCopy, localeTags, publishedLocales, type Locale } from '../i18n';
+import { brand, contact, organisation, socialLinks } from '../data/site';
+
+interface Props {
+  locale?: Locale;
+  title?: string;
+  description?: string;
+}
+
+const { locale = 'nl', title, description } = Astro.props;
+const copy = getCopy(locale);
+
+const pageTitle = title ?? copy.meta.title;
+const pageDescription = description ?? copy.meta.description;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = brand.ogImage ? new URL(brand.ogImage, Astro.site).href : null;
+
+/**
+ * Structured data is limited to `Organization`. There is deliberately no
+ * LocalBusiness, address, opening hours, price, rating or service-area markup:
+ * publishing any of that before the details are confirmed would be a
+ * fabricated claim, and Google penalises structured data that does not match
+ * the page.
+ */
+const organizationSchema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: brand.name,
+  url: canonical,
+  description: pageDescription,
+  ...(brand.logo ? { logo: new URL(brand.logo.src, Astro.site).href } : {}),
+  ...(socialLinks.length > 0 ? { sameAs: socialLinks.map((s) => s.href) } : {}),
+  ...(contact.email || contact.phone
+    ? {
+        contactPoint: {
+          '@type': 'ContactPoint',
+          contactType: 'customer support',
+          availableLanguage: ['nl'],
+          ...(contact.email ? { email: contact.email } : {}),
+          ...(contact.phone ? { telephone: contact.phone.href } : {}),
+        },
+      }
+    : {}),
+  ...(organisation.dayProgramme.legalName
+    ? { legalName: organisation.dayProgramme.legalName }
+    : {}),
+};
+---
+
+<!doctype html>
+<html lang={localeTags[locale]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonical} />
+
+    {
+      publishedLocales.map((published) => (
+        <link
+          rel="alternate"
+          hreflang={localeTags[published]}
+          href={new URL(published === 'nl' ? '/' : `/${published}/`, Astro.site).href}
+        />
+      ))
+    }
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={localeTags[locale].replace('-', '_')} />
+    <meta property="og:site_name" content={brand.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogImage && <meta property="og:image:alt" content={copy.meta.ogAlt} />}
+
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    <meta name="theme-color" content="#fbf6ee" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
+    <link
+      rel="preload"
+      href="/fonts/source-sans-3-latin-var.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/fraunces-latin-var.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(organizationSchema)}
+    />
+
+    <script is:inline>
+      // Opt into scroll-reveal only when the browser supports it and the
+      // visitor has not asked for reduced motion. Runs before paint so
+      // content is never hidden without a way to bring it back.
+      (() => {
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduced && 'IntersectionObserver' in window) {
+          document.documentElement.classList.add('js-reveal');
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">{copy.nav.skipToContent}</a>
+    <Header locale={locale} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+
+    <script>
+      // ---------------------------------------------------------------------
+      // Scroll reveal. One observer, unobserved on first intersection, and a
+      // hard fallback that reveals everything if anything goes wrong.
+      // ---------------------------------------------------------------------
+      const root = document.documentElement;
+
+      if (root.classList.contains('js-reveal')) {
+        const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add('is-revealed');
+              observer.unobserve(entry.target);
+            }
+          },
+          { rootMargin: '0px 0px -12% 0px', threshold: 0.05 },
+        );
+
+        for (const target of targets) {
+          // Anything already on screen at load reveals immediately, so the
+          // first viewport never animates in after the fact.
+          if (target.getBoundingClientRect().top < window.innerHeight * 0.9) {
+            target.classList.add('is-revealed');
+          } else {
+            observer.observe(target);
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

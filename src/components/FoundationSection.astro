@@ -1,0 +1,293 @@
+---
+import Button from './ui/Button.astro';
+import { anchors } from '../data/navigation';
+import { getCopy, type Locale } from '../i18n';
+import { hasFoundationDetails, organisation } from '../data/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+const foundation = organisation.foundation;
+const labels = copy.foundation.labels;
+
+/** Donations go to the real donation page when one exists, contact until then. */
+const pathHrefs = [anchors.contact, anchors.contact, foundation.donationUrl ?? anchors.contact];
+const pathIsExternal = [false, false, Boolean(foundation.donationUrl)];
+---
+
+<section class="foundation section" id="stichting" aria-labelledby="foundation-title">
+  <div class="container container--wide">
+    <div class="foundation__head">
+      <div data-reveal>
+        <p class="eyebrow">{copy.foundation.eyebrow}</p>
+        <h2 class="foundation__title" id="foundation-title">{copy.foundation.title}</h2>
+      </div>
+      <p class="foundation__lead" data-reveal style="--reveal-delay: 80ms">
+        {copy.foundation.lead}
+      </p>
+    </div>
+
+    <ul class="foundation__paths">
+      {
+        copy.foundation.paths.map((path, index) => (
+          <li class="foundation__path" data-reveal style={`--reveal-delay: ${index * 80}ms`}>
+            <span class="foundation__path-index" aria-hidden="true">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <h3 class="foundation__path-title">{path.title}</h3>
+            <p class="foundation__path-body">{path.body}</p>
+            <Button
+              href={pathHrefs[index]}
+              variant="ghost"
+              class="foundation__path-cta"
+              {...(pathIsExternal[index]
+                ? { target: '_blank', rel: 'noopener noreferrer' }
+                : {})}
+            >
+              {path.cta}
+            </Button>
+          </li>
+        ))
+      }
+    </ul>
+
+    {
+      /* Renders only once real registration data exists in `site.ts`. Nothing
+         about ANBI, RSIN or the board is ever implied before it is confirmed. */
+      hasFoundationDetails && (
+        <div class="foundation__details" data-reveal>
+          <h3 class="foundation__details-title">{copy.foundation.detailsTitle}</h3>
+          <dl class="foundation__facts">
+            {foundation.kvk && (
+              <div class="foundation__fact">
+                <dt>{labels.kvk}</dt>
+                <dd>{foundation.kvk}</dd>
+              </div>
+            )}
+            {foundation.anbi && (
+              <>
+                <div class="foundation__fact">
+                  <dt>{labels.rsin}</dt>
+                  <dd>{foundation.anbi.rsin}</dd>
+                </div>
+                <div class="foundation__fact">
+                  <dt>{labels.anbi}</dt>
+                  <dd>
+                    {labels.anbiGranted} {foundation.anbi.grantedOn}
+                  </dd>
+                </div>
+              </>
+            )}
+            {foundation.iban && (
+              <div class="foundation__fact">
+                <dt>{labels.iban}</dt>
+                <dd>
+                  {foundation.iban.number}
+                  <span class="foundation__fact-note">{foundation.iban.holder}</span>
+                </dd>
+              </div>
+            )}
+            {foundation.policyPlanUrl && (
+              <div class="foundation__fact">
+                <dt>{labels.policyPlan}</dt>
+                <dd>
+                  <a href={foundation.policyPlanUrl}>{labels.viewDocument}</a>
+                </dd>
+              </div>
+            )}
+            {foundation.annualReportUrl && (
+              <div class="foundation__fact">
+                <dt>{labels.annualReport}</dt>
+                <dd>
+                  <a href={foundation.annualReportUrl}>{labels.viewDocument}</a>
+                </dd>
+              </div>
+            )}
+            {foundation.board.length > 0 && (
+              <div class="foundation__fact foundation__fact--wide">
+                <dt>{labels.board}</dt>
+                <dd>
+                  <ul class="foundation__board">
+                    {foundation.board.map((member) => (
+                      <li>
+                        <strong>{member.name}</strong> — {member.role}
+                      </li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+            )}
+          </dl>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .foundation {
+    background-color: var(--color-surface);
+  }
+
+  .foundation__head {
+    display: grid;
+    gap: var(--space-md);
+    margin-block-end: var(--space-xl);
+  }
+
+  .foundation__title {
+    margin: var(--space-md) 0 0;
+    max-inline-size: 16ch;
+  }
+
+  .foundation__lead {
+    margin: 0;
+    font-size: var(--text-md);
+    color: var(--color-muted);
+    max-inline-size: var(--measure);
+  }
+
+  /* Three routes in, divided by rules rather than boxed into cards. */
+  .foundation__paths {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .foundation__path {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-2xs);
+    padding-block: var(--space-lg);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .foundation__path-index {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-accent-ink);
+  }
+
+  .foundation__path-title {
+    margin: 0;
+    font-size: var(--text-lg);
+  }
+
+  .foundation__path-body {
+    margin: 0;
+    color: var(--color-muted);
+    max-inline-size: 40ch;
+  }
+
+  .foundation__path-cta {
+    margin-block-start: var(--space-2xs);
+  }
+
+  .foundation__details {
+    margin-block-start: var(--space-xl);
+    padding: var(--space-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-background);
+  }
+
+  .foundation__details-title {
+    margin: 0 0 var(--space-md);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .foundation__facts {
+    display: grid;
+    gap: var(--space-md);
+    margin: 0;
+  }
+
+  .foundation__fact dt {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--color-muted);
+  }
+
+  .foundation__fact dd {
+    margin: var(--space-3xs) 0 0;
+    font-weight: var(--weight-medium);
+  }
+
+  .foundation__fact-note {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-regular);
+    color: var(--color-muted);
+  }
+
+  .foundation__board {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--space-3xs);
+  }
+
+  @media (min-width: 48rem) {
+    .foundation__facts {
+      grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .foundation__fact--wide {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 62rem) {
+    .foundation__head {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gap-col);
+      align-items: end;
+      margin-block-end: var(--space-2xl);
+    }
+
+    .foundation__head > *:first-child {
+      grid-column: 1 / span 6;
+    }
+
+    .foundation__lead {
+      grid-column: 8 / span 5;
+      padding-block-end: var(--space-2xs);
+    }
+
+    .foundation__paths {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: var(--space-2xl);
+      border-block-end: 1px solid var(--color-border);
+    }
+
+    .foundation__path {
+      padding-block: var(--space-xl);
+      border-block-end: none;
+    }
+
+    .foundation__path + .foundation__path {
+      padding-inline-start: calc(var(--space-2xl) / 2);
+      margin-inline-start: calc(var(--space-2xl) / -2);
+      border-inline-start: 1px solid var(--color-border);
+    }
+
+    .foundation__details {
+      padding: var(--space-xl);
+    }
+  }
+</style>

@@ -1,0 +1,213 @@
+---
+import Button from './ui/Button.astro';
+import Picture from './ui/Picture.astro';
+import { anchors } from '../data/navigation';
+import { getCopy, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+---
+
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <!-- Sunrise motif, drawn from the brand mark. Purely decorative. -->
+  <svg class="hero__motif" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+    <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+      <circle cx="300" cy="300" r="120" />
+      <circle cx="300" cy="300" r="184" opacity="0.66" />
+      <circle cx="300" cy="300" r="248" opacity="0.4" />
+      <circle cx="300" cy="300" r="312" opacity="0.22" />
+    </g>
+  </svg>
+
+  <div class="hero__inner container container--wide">
+    <div class="hero__content">
+      <p class="eyebrow hero__eyebrow">{copy.hero.eyebrow}</p>
+      <h1 class="hero__title" id="hero-title">{copy.hero.title}</h1>
+      <p class="hero__lead">{copy.hero.lead}</p>
+
+      <div class="hero__actions">
+        <Button href={anchors.contact} size="lg">{copy.hero.primaryCta}</Button>
+        <Button href={anchors.referral} size="lg" variant="secondary">
+          {copy.hero.secondaryCta}
+        </Button>
+      </div>
+
+      <p class="hero__note">
+        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          <circle cx="10" cy="10" r="8.25" fill="none" stroke="currentColor" stroke-width="1.4" />
+          <path
+            d="M6.5 10.2 8.9 12.6 13.6 7.8"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+        {copy.hero.note}
+      </p>
+    </div>
+
+    <div class="hero__media">
+      <Picture
+        slotLabel={copy.hero.imageSlot}
+        alt={copy.hero.imageAlt}
+        ratio="4 / 5"
+        priority
+        sizes="(max-width: 62rem) 92vw, 40vw"
+        class="hero__picture"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block-start: calc(var(--header-height) + var(--space-xl));
+    padding-block-end: var(--space-2xl);
+    background-color: var(--color-background);
+    /* A whisper of warmth at the top so the transparent header has something
+       to sit on without needing a band of its own. */
+    background-image: radial-gradient(
+      120% 80% at 78% -10%,
+      rgba(224, 160, 53, 0.16) 0%,
+      rgba(224, 160, 53, 0) 62%
+    );
+  }
+
+  .hero__motif {
+    position: absolute;
+    inset-block-start: -18rem;
+    inset-inline-end: -14rem;
+    inline-size: min(46rem, 90vw);
+    color: var(--color-accent);
+    opacity: 0.26;
+    pointer-events: none;
+  }
+
+  .hero__inner {
+    position: relative;
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: var(--space-md);
+    max-inline-size: 34rem;
+  }
+
+  .hero__eyebrow {
+    color: var(--color-secondary-ink);
+  }
+
+  .hero__title {
+    margin: 0;
+    max-inline-size: 16ch;
+  }
+
+  .hero__lead {
+    margin: 0;
+    max-inline-size: 46ch;
+    font-size: var(--text-md);
+    color: var(--color-muted);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-block-start: var(--space-2xs);
+  }
+
+  .hero__note {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+
+  .hero__note svg {
+    inline-size: 1.25rem;
+    flex: none;
+    color: var(--color-secondary);
+  }
+
+  .hero__media {
+    position: relative;
+  }
+
+  /* A thin offset frame instead of a drop shadow: depth without weight. */
+  .hero__media::before {
+    content: '';
+    position: absolute;
+    inset: var(--space-md) calc(var(--space-md) * -1) calc(var(--space-md) * -1)
+      var(--space-md);
+    border: 1.5px solid var(--color-accent);
+    border-radius: var(--radius-lg);
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  .hero__picture {
+    position: relative;
+    box-shadow: var(--shadow-lifted);
+  }
+
+  /* --- Mobile: the image bleeds to the right edge so the composition reads
+     as a photograph the page is built around, not a block underneath it. --- */
+  @media (max-width: 61.999rem) {
+    .hero__media {
+      margin-inline-end: calc(var(--gutter) * -1);
+    }
+
+    .hero__media::before {
+      inset: var(--space-sm) 0 calc(var(--space-sm) * -1) var(--space-sm);
+      border-inline-end: none;
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
+    }
+
+    .hero__picture {
+      aspect-ratio: 4 / 3;
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
+    }
+  }
+
+  @media (min-width: 62rem) {
+    .hero {
+      padding-block-start: calc(var(--header-height) + var(--space-lg));
+      padding-block-end: var(--space-2xl);
+    }
+
+    .hero__inner {
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.82fr);
+      gap: clamp(3rem, 1rem + 5vw, 6rem);
+      align-items: center;
+    }
+
+    .hero__content {
+      gap: var(--space-lg);
+    }
+
+    .hero__actions {
+      gap: var(--space-sm);
+    }
+  }
+
+  @media (min-width: 90rem) {
+    .hero__title {
+      max-inline-size: 15ch;
+    }
+  }
+</style>

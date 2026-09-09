@@ -1,0 +1,487 @@
+---
+import Button from './ui/Button.astro';
+import SectionIntro from './ui/SectionIntro.astro';
+import { getCopy, type Locale } from '../i18n';
+import { contact, legal } from '../data/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+const form = copy.contact.form;
+
+/** With no endpoint configured the form is shown but cannot silently eat a
+ *  message: it is disabled and the direct channels are offered instead. */
+const isLive = Boolean(contact.formEndpoint);
+const hasDirect = Boolean(
+  contact.email || contact.phone || contact.address || contact.openingHours.length > 0,
+);
+---
+
+<section class="contact section" id="contact" aria-labelledby="contact-title">
+  <div
+    class="contact__inner container container--wide"
+    data-layout={hasDirect ? 'split' : 'single'}
+  >
+    <div class="contact__head">
+      <SectionIntro
+        eyebrow={copy.contact.eyebrow}
+        title={copy.contact.title}
+        lead={copy.contact.lead}
+        id="contact-title"
+        align={hasDirect ? 'start' : 'center'}
+      />
+
+      {
+        hasDirect && (
+          <div class="contact__direct">
+            <h3 class="contact__direct-title">{copy.contact.directTitle}</h3>
+            <ul class="contact__channels">
+              {contact.phone && (
+                <li>
+                  <a class="contact__channel" href={`tel:${contact.phone.href}`}>
+                    {contact.phone.display}
+                  </a>
+                </li>
+              )}
+              {contact.email && (
+                <li>
+                  <a class="contact__channel" href={`mailto:${contact.email}`}>
+                    {contact.email}
+                  </a>
+                </li>
+              )}
+              {contact.address && (
+                <li>
+                  <address class="contact__address">
+                    {contact.address.street}
+                    <br />
+                    {contact.address.postalCode} {contact.address.city}
+                  </address>
+                </li>
+              )}
+            </ul>
+
+            {contact.openingHours.length > 0 && (
+              <div class="contact__hours">
+                <h4 class="contact__hours-title">{copy.contact.hoursTitle}</h4>
+                <dl>
+                  {contact.openingHours.map((period) => (
+                    <div>
+                      <dt>{period.days}</dt>
+                      <dd>{period.hours}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            )}
+
+            {contact.locationNote && <p class="contact__note">{contact.locationNote}</p>}
+          </div>
+        )
+      }
+    </div>
+
+    <div class="contact__panel" data-reveal style="--reveal-delay: 90ms">
+      {
+        !isLive && (
+          <div class="contact__alert" role="note">
+            <h3>{form.unavailableTitle}</h3>
+            <p>{form.unavailableBody}</p>
+          </div>
+        )
+      }
+
+      <form
+        class="contact__form"
+        method="post"
+        action={contact.formEndpoint ?? undefined}
+        novalidate={!isLive}
+      >
+        <fieldset disabled={!isLive}>
+          <legend class="visually-hidden">{form.legend}</legend>
+
+          <!-- Spam trap. Hidden from everyone, including assistive technology,
+               and still submitted, so a bot filling it in is easy to reject. -->
+          <div hidden aria-hidden="true">
+            <label for="company">Bedrijfsnaam</label>
+            <input id="company" type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="name">
+              {form.name.label}
+              <span class="field__req">({form.required})</span>
+            </label>
+            <input
+              class="field__input"
+              id="name"
+              name="naam"
+              type="text"
+              required
+              autocomplete={form.name.autocomplete}
+            />
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label class="field__label" for="email">
+                {form.email.label}
+                <span class="field__req">({form.required})</span>
+              </label>
+              <input
+                class="field__input"
+                id="email"
+                name="email"
+                type="email"
+                required
+                autocomplete={form.email.autocomplete}
+                inputmode="email"
+              />
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="phone">
+                {form.phone.label}
+                <span class="field__req">({form.phone.optional})</span>
+              </label>
+              <input
+                class="field__input"
+                id="phone"
+                name="telefoon"
+                type="tel"
+                autocomplete={form.phone.autocomplete}
+                inputmode="tel"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="role">
+              {form.role.label}
+              <span class="field__req">({form.required})</span>
+            </label>
+            <div class="field__select">
+              <select class="field__input" id="role" name="rol" required>
+                <option value="" selected disabled>{form.role.placeholder}</option>
+                {form.role.options.map((option) => <option value={option}>{option}</option>)}
+              </select>
+              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <path
+                  d="m5 8 5 5 5-5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"></path>
+              </svg>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="message">
+              {form.message.label}
+              <span class="field__req">({form.required})</span>
+            </label>
+            <textarea
+              class="field__input field__textarea"
+              id="message"
+              name="bericht"
+              rows="5"
+              required
+              aria-describedby="message-hint"></textarea>
+            <p class="field__hint" id="message-hint">{form.message.hint}</p>
+          </div>
+
+          <div class="field field--consent">
+            <input class="field__checkbox" id="consent" name="toestemming" type="checkbox" required />
+            <label class="field__consent-label" for="consent">
+              {form.consent}
+              {legal.privacyUrl && (
+                <>
+                  {' '}
+                  <a href={legal.privacyUrl}>{copy.footer.privacy}</a>.
+                </>
+              )}
+            </label>
+          </div>
+
+          <Button type="submit" size="lg" class="contact__submit" disabled={!isLive}>
+            {form.submit}
+          </Button>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    background-color: var(--color-background);
+  }
+
+  .contact__inner {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .contact__head {
+    display: grid;
+    gap: var(--space-xl);
+    align-content: start;
+  }
+
+  .contact__direct-title,
+  .contact__hours-title {
+    margin: 0 0 var(--space-sm);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .contact__channels {
+    display: grid;
+    gap: var(--space-2xs);
+    margin: 0 0 var(--space-lg);
+    padding: 0;
+    list-style: none;
+  }
+
+  .contact__channel {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .contact__channel:hover {
+    color: var(--color-primary-ink);
+  }
+
+  .contact__address {
+    font-style: normal;
+    color: var(--color-muted);
+  }
+
+  .contact__hours dl {
+    display: grid;
+    gap: var(--space-2xs);
+    margin: 0;
+  }
+
+  .contact__hours dl > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-sm);
+    padding-block: var(--space-2xs);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .contact__hours dt {
+    flex: 1 1 10rem;
+    color: var(--color-muted);
+  }
+
+  .contact__hours dd {
+    margin: 0;
+    font-weight: var(--weight-semibold);
+  }
+
+  .contact__note {
+    margin: var(--space-md) 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    max-inline-size: 40ch;
+  }
+
+  /* --- The form ----------------------------------------------------------- */
+
+  .contact__panel {
+    padding: var(--space-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .contact__alert {
+    margin-block-end: var(--space-lg);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-sand);
+    border-inline-start: 3px solid var(--color-accent);
+  }
+
+  .contact__alert h3 {
+    margin: 0 0 var(--space-3xs);
+    font-size: var(--text-md);
+  }
+
+  .contact__alert p {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+
+  .contact__form fieldset {
+    display: grid;
+    gap: var(--space-md);
+    margin: 0;
+    padding: 0;
+    border: none;
+    min-inline-size: 0;
+  }
+
+  .contact__form fieldset:disabled {
+    /* Readable while inert: the notice above explains why it is inert. */
+    opacity: 0.72;
+  }
+
+  .field {
+    display: grid;
+    gap: var(--space-3xs);
+  }
+
+  .field__label {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+  }
+
+  .field__req {
+    font-weight: var(--weight-regular);
+    color: var(--color-muted);
+  }
+
+  .field__input {
+    inline-size: 100%;
+    /* Generous targets: the primary audience includes people using a phone
+       one-handed and people with reduced dexterity. */
+    min-block-size: 3.25rem;
+    padding: 0.75rem var(--space-sm);
+    border: 1.5px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background-color: var(--color-background);
+    font-size: var(--text-base);
+    line-height: 1.4;
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out);
+  }
+
+  .field__input:hover {
+    border-color: var(--color-muted);
+  }
+
+  .field__input:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-secondary) 24%, transparent);
+  }
+
+  .field__textarea {
+    min-block-size: 8rem;
+    padding-block: var(--space-sm);
+    resize: vertical;
+  }
+
+  .field__select {
+    position: relative;
+    display: grid;
+  }
+
+  .field__select select {
+    appearance: none;
+    padding-inline-end: var(--space-xl);
+  }
+
+  .field__select svg {
+    position: absolute;
+    inset-inline-end: var(--space-sm);
+    inset-block-start: 50%;
+    inline-size: 1.25rem;
+    translate: 0 -50%;
+    color: var(--color-muted);
+    pointer-events: none;
+  }
+
+  .field__hint {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+
+  .field--consent {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-sm);
+    align-items: start;
+    padding-block-start: var(--space-2xs);
+  }
+
+  .field__checkbox {
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    margin: 0.2rem 0 0;
+    accent-color: var(--color-secondary);
+    flex: none;
+  }
+
+  .field__consent-label {
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-muted);
+  }
+
+  .contact__submit {
+    justify-self: start;
+    margin-block-start: var(--space-2xs);
+  }
+
+  @media (min-width: 40rem) {
+    .field-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md);
+    }
+  }
+
+  /* Until direct contact details exist there is nothing to fill a second
+     column with, so the section becomes a single centred column rather than a
+     form beside an empty half. Adding a phone number or address in `site.ts`
+     switches it back to the split layout automatically. */
+  .contact__inner[data-layout='single'] {
+    max-inline-size: 46rem;
+    justify-items: center;
+  }
+
+  .contact__inner[data-layout='single'] .contact__panel {
+    inline-size: 100%;
+  }
+
+  @media (min-width: 62rem) {
+    .contact__inner[data-layout='split'] {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gap-col);
+      align-items: start;
+    }
+
+    .contact__inner[data-layout='split'] .contact__head {
+      grid-column: 1 / span 5;
+      position: sticky;
+      inset-block-start: calc(var(--header-height) + var(--space-lg));
+    }
+
+    .contact__inner[data-layout='split'] .contact__panel {
+      grid-column: 7 / span 6;
+    }
+
+    .contact__panel {
+      padding: var(--space-xl);
+    }
+  }
+</style>

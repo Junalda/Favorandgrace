@@ -1,0 +1,86 @@
+---
+import Button from './ui/Button.astro';
+import { anchors } from '../data/navigation';
+import { getCopy, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+---
+
+<section class="final-cta" data-ground="dark" aria-labelledby="final-cta-title">
+  <svg class="final-cta__motif" viewBox="0 0 800 400" aria-hidden="true" focusable="false">
+    <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <path d="M60 400a340 340 0 0 1 680 0" />
+      <path d="M140 400a260 260 0 0 1 520 0" opacity="0.7" />
+      <path d="M220 400a180 180 0 0 1 360 0" opacity="0.45" />
+      <path d="M300 400a100 100 0 0 1 200 0" opacity="0.25" />
+    </g>
+  </svg>
+
+  <div class="final-cta__inner container">
+    <h2 class="final-cta__title" id="final-cta-title">{copy.finalCta.title}</h2>
+    <p class="final-cta__lead">{copy.finalCta.lead}</p>
+    <div class="final-cta__actions">
+      <Button href={anchors.contact} size="lg" variant="inverse">
+        {copy.finalCta.primaryCta}
+      </Button>
+      <Button href={anchors.contact} size="lg" variant="inverse-outline">
+        {copy.finalCta.secondaryCta}
+      </Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .final-cta {
+    position: relative;
+    overflow: hidden;
+    padding-block: var(--space-3xl);
+    background-color: var(--color-secondary-deep);
+    color: var(--color-text);
+    text-align: center;
+  }
+
+  .final-cta__motif {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-start: 50%;
+    inline-size: min(72rem, 150%);
+    translate: -50% 0;
+    color: var(--color-accent);
+    opacity: 0.16;
+    pointer-events: none;
+  }
+
+  .final-cta__inner {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-md);
+  }
+
+  .final-cta__title {
+    margin: 0;
+    font-size: var(--text-3xl);
+    max-inline-size: 20ch;
+  }
+
+  .final-cta__lead {
+    margin: 0;
+    font-size: var(--text-md);
+    color: var(--color-on-dark-muted);
+    max-inline-size: 46ch;
+  }
+
+  .final-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-xs);
+    margin-block-start: var(--space-md);
+  }
+</style>

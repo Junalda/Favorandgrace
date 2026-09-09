@@ -1,0 +1,143 @@
+/* ==========================================================================
+   Favour & Grace — design tokens
+   Single source of truth for colour, type, space, radius and elevation.
+   Palette is derived from the Favour & Grace logo: warm sand, terracotta,
+   deep teal and amber. No value in a component should be arbitrary.
+   ========================================================================== */
+
+:root {
+  /* --- Colour: grounds ---------------------------------------------------- */
+  --color-background: #fbf6ee;
+  --color-surface: #ffffff;
+  --color-surface-sand: #f3e9da;
+  --color-surface-sand-deep: #ecdfcc;
+
+  /* --- Colour: ink -------------------------------------------------------- */
+  --color-text: #22160f;
+  --color-muted: #6e5b4e;
+  --color-border: #e3d6c4;
+  --color-border-strong: #d2bfa6;
+
+  /* --- Colour: brand ------------------------------------------------------ */
+  --color-primary: #b4432a;         /* terracotta — fills, large marks       */
+  --color-primary-ink: #8f3018;     /* terracotta — text on light grounds    */
+  --color-primary-deep: #9c3620;    /* terracotta — section ground           */
+
+  --color-secondary: #1c6e74;       /* teal — fills, links                   */
+  --color-secondary-ink: #14565b;   /* teal — text on light grounds          */
+  --color-secondary-deep: #114a50;  /* teal — section ground                 */
+
+  --color-accent: #e0a035;          /* amber — rules and decorative marks    */
+  --color-accent-soft: #f4d9a6;     /* amber — small text on dark grounds    */
+  --color-accent-ink: #8a5a12;      /* amber — small text on light grounds   */
+
+  /* --- Colour: inverted grounds ------------------------------------------- */
+  --color-ink-deep: #1e1410;   /* footer ground */
+  --color-on-dark: #fbf6ee;
+  --color-on-dark-muted: #d9cdbc;
+  --color-on-dark-border: rgba(251, 246, 238, 0.22);
+
+  /* --- Typography --------------------------------------------------------- */
+  --font-display: 'Fraunces Variable', 'Fraunces', 'Iowan Old Style',
+    'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
+  --font-body: 'Source Sans 3 Variable', 'Source Sans 3', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Fluid scale. Minimums are deliberately generous: the primary audience is
+     55+ and readability outranks density. */
+  --text-xs: clamp(0.8125rem, 0.79rem + 0.12vw, 0.875rem);
+  --text-sm: clamp(0.9375rem, 0.91rem + 0.14vw, 1rem);
+  --text-base: clamp(1.0625rem, 1.02rem + 0.22vw, 1.1875rem);
+  --text-md: clamp(1.1875rem, 1.13rem + 0.3vw, 1.375rem);
+  --text-lg: clamp(1.375rem, 1.28rem + 0.48vw, 1.75rem);
+  --text-xl: clamp(1.625rem, 1.45rem + 0.86vw, 2.25rem);
+  --text-2xl: clamp(2rem, 1.66rem + 1.7vw, 3rem);
+  --text-3xl: clamp(2.375rem, 1.86rem + 2.55vw, 4rem);
+  --text-4xl: clamp(2.75rem, 2.14rem + 3.05vw, 4.5rem);
+
+  --leading-tight: 1.08;
+  --leading-snug: 1.2;
+  --leading-normal: 1.4;
+  --leading-relaxed: 1.62;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.08em;
+  --tracking-wider: 0.16em;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --measure: 62ch;
+  --measure-narrow: 46ch;
+
+  /* --- Space -------------------------------------------------------------- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.25rem;
+  --space-xl: 3.5rem;
+  --space-2xl: clamp(4.5rem, 3.6rem + 4.5vw, 7.5rem);
+  --space-3xl: clamp(6rem, 4.5rem + 7.5vw, 11rem);
+
+  --section-y: var(--space-2xl);
+  --gutter: clamp(1.25rem, 0.85rem + 2vw, 2.75rem);
+  /* Column gutter for the 12-column grids. Deliberately modest: it is
+     multiplied by eleven, so a large value overflows narrow desktops. */
+  --gap-col: clamp(1.25rem, 0.9rem + 1.6vw, 2.5rem);
+  --container: 78rem;
+  --container-wide: 92rem;
+
+  /* --- Radius ------------------------------------------------------------- */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 22px;
+  --radius-xl: 34px;
+  --radius-pill: 999px;
+
+  /* --- Elevation ---------------------------------------------------------- */
+  --shadow-soft: 0 1px 2px rgba(34, 22, 15, 0.04),
+    0 8px 24px -12px rgba(34, 22, 15, 0.14);
+  --shadow-lifted: 0 2px 4px rgba(34, 22, 15, 0.05),
+    0 24px 48px -20px rgba(34, 22, 15, 0.22);
+  --shadow-inset-hairline: inset 0 0 0 1px var(--color-border);
+
+  /* --- Motion ------------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 160ms;
+  --duration-base: 260ms;
+  --duration-slow: 620ms;
+
+  /* --- Layers ------------------------------------------------------------- */
+  --z-header: 100;
+  --z-menu: 110;
+  --z-skip: 120;
+}
+
+/* Sections declare their ground once; children inherit the correct ink.
+   This keeps dark bands from needing per-element colour overrides. */
+[data-ground='dark'] {
+  --color-text: var(--color-on-dark);
+  --color-muted: var(--color-on-dark-muted);
+  --color-border: var(--color-on-dark-border);
+  --color-border-strong: rgba(251, 246, 238, 0.38);
+  --color-primary-ink: var(--color-accent-soft);
+  --color-secondary-ink: var(--color-accent-soft);
+}
+
+/* Header height is referenced by scroll-padding, the hero offset and the
+   mobile menu, so it lives with the other tokens rather than in one component. */
+:root {
+  --header-height: 4.5rem;
+}
+
+@media (min-width: 62rem) {
+  :root {
+    --header-height: 5.5rem;
+  }
+}

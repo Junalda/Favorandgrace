@@ -1,0 +1,76 @@
+---
+/**
+ * The shared section opening: eyebrow, heading and optional lead.
+ * Alignment and width are the only knobs — everything else is the type scale,
+ * so section headings stay consistent across fourteen very different layouts.
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  align?: 'start' | 'center';
+  /** Renders the heading one step down for secondary bands. */
+  level?: 2 | 3;
+  size?: 'md' | 'lg';
+  class?: string;
+  id?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  lead,
+  align = 'start',
+  level = 2,
+  size = 'lg',
+  class: className,
+  id,
+} = Astro.props;
+
+const Heading = `h${level}` as 'h2' | 'h3';
+---
+
+<div class:list={['intro', `intro--${align}`, `intro--${size}`, className]}>
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <Heading class="intro__title" id={id}>{title}</Heading>
+  {lead && <p class="intro__lead lead">{lead}</p>}
+</div>
+
+<style>
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .intro--center {
+    align-items: center;
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .intro--center .eyebrow::before {
+    display: none;
+  }
+
+  .intro__title {
+    margin: 0;
+    /* Headline measure is deliberately short: two or three lines reads as a
+       statement, five lines reads as a paragraph. */
+    max-inline-size: 20ch;
+  }
+
+  .intro--md .intro__title {
+    font-size: var(--text-2xl);
+    max-inline-size: 24ch;
+  }
+
+  .intro--center .intro__title {
+    max-inline-size: 24ch;
+  }
+
+  .intro__lead {
+    margin: 0;
+    max-inline-size: var(--measure);
+  }
+</style>

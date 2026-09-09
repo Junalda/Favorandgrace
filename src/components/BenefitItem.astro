@@ -1,0 +1,45 @@
+---
+interface Props {
+  index: number;
+  title: string;
+  body: string;
+}
+
+const { index, title, body } = Astro.props;
+const number = String(index).padStart(2, '0');
+---
+
+<li class="benefit" data-reveal style={`--reveal-delay: ${(index - 1) * 70}ms`}>
+  <p class="benefit__index" aria-hidden="true">{number}</p>
+  <h3 class="benefit__title">{title}</h3>
+  <p class="benefit__body">{body}</p>
+</li>
+
+<style>
+  .benefit {
+    display: grid;
+    gap: var(--space-2xs);
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .benefit__index {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-accent-soft);
+  }
+
+  .benefit__title {
+    margin: 0;
+    font-size: var(--text-lg);
+  }
+
+  .benefit__body {
+    margin: 0;
+    color: var(--color-muted);
+    max-inline-size: 42ch;
+  }
+</style>

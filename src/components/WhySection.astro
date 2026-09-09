@@ -1,0 +1,87 @@
+---
+import BenefitItem from './BenefitItem.astro';
+import SectionIntro from './ui/SectionIntro.astro';
+import { getCopy, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = getCopy(locale);
+---
+
+<section class="why section" data-ground="dark" aria-labelledby="why-title">
+  <div class="why__inner container container--wide">
+    <div class="why__head">
+      <SectionIntro
+        eyebrow={copy.why.eyebrow}
+        title={copy.why.title}
+        lead={copy.why.lead}
+        id="why-title"
+      />
+    </div>
+
+    <ul class="why__list">
+      {
+        copy.why.items.map((item, index) => (
+          <BenefitItem index={index + 1} title={item.title} body={item.body} />
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .why {
+    background-color: var(--color-secondary-deep);
+    color: var(--color-text);
+    /* A faint sunrise glow from the lower left keeps the dark band from
+       reading as a flat rectangle. */
+    background-image: radial-gradient(
+      90% 70% at 8% 100%,
+      rgba(224, 160, 53, 0.14) 0%,
+      rgba(224, 160, 53, 0) 60%
+    );
+  }
+
+  .why__inner {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .why__list {
+    display: grid;
+    gap: var(--space-lg);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 48rem) {
+    .why__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-xl);
+      row-gap: var(--space-xl);
+    }
+  }
+
+  @media (min-width: 62rem) {
+    .why__inner {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gap-col);
+    }
+
+    .why__head {
+      grid-column: 1 / span 4;
+      position: sticky;
+      /* Holds the heading in view while the four principles pass it. */
+      inset-block-start: calc(var(--header-height) + var(--space-lg));
+      align-self: start;
+    }
+
+    .why__list {
+      grid-column: 6 / span 7;
+    }
+  }
+</style>

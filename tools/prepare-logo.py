@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cut the Favour & Grace logo out of its photographic background.
+"""Cut the Favor & Grace logo out of its photographic background.
 
 The logo was supplied as a JPEG: flat illustration artwork sitting on a
 sky-to-sand photo with a sun flare down the right-hand edge. This script

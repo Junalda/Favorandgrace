@@ -2,7 +2,7 @@
  * Dutch copy — the source of truth for all visible text.
  *
  * Rules for editing:
- *  - Never state a fact here that has not been confirmed by Favour & Grace.
+ *  - Never state a fact here that has not been confirmed by Favor & Grace.
  *  - Organisational facts (address, KvK, ANBI, partners) belong in
  *    `src/data/site.ts`, not in this file.
  *  - Copy marked in `contentApproval` (site.ts) is written from the brief and
@@ -11,10 +11,10 @@
 
 export const nl = {
   meta: {
-    title: 'Favour & Grace — cultureel herkenbare dagbesteding voor ouderen',
+    title: 'Favor & Grace — cultureel herkenbare dagbesteding voor ouderen',
     description:
-      'Favour & Grace biedt cultuursensitieve dagbesteding voor ouderen vanaf circa 55 jaar. Een warme plek met herkenning, verbinding en persoonlijke aandacht.',
-    ogAlt: 'Favour & Grace — de kracht van cultuursensitieve dagbesteding',
+      'Favor & Grace biedt cultuursensitieve dagbesteding voor ouderen vanaf circa 55 jaar. Een warme plek met herkenning, verbinding en persoonlijke aandacht.',
+    ogAlt: 'Favor & Grace — de kracht van cultuursensitieve dagbesteding',
   },
 
   nav: {
@@ -30,18 +30,18 @@ export const nl = {
     openMenu: 'Menu openen',
     closeMenu: 'Menu sluiten',
     skipToContent: 'Direct naar de inhoud',
-    homeLabel: 'Favour & Grace, terug naar het begin van de pagina',
+    homeLabel: 'Favor & Grace, terug naar het begin van de pagina',
   },
 
   hero: {
     eyebrow: 'Cultuursensitieve dagbesteding',
     title: 'Een plek waar herkenning, verbinding en aandacht samenkomen.',
-    lead: 'Favour & Grace biedt cultureel herkenbare dagbesteding voor ouderen die behoefte hebben aan verbinding, persoonlijke aandacht en een omgeving waar zij zich thuis voelen.',
+    lead: 'Favor & Grace biedt cultureel herkenbare dagbesteding voor ouderen die behoefte hebben aan verbinding, persoonlijke aandacht en een omgeving waar zij zich thuis voelen.',
     primaryCta: 'Kennismaken',
     secondaryCta: 'Iemand aanmelden',
     note: 'Dagbesteding voor ouderen vanaf circa 55 jaar.',
     imageAlt:
-      'Deelnemers van Favour & Grace in gesprek met elkaar tijdens een dagbestedingsochtend.',
+      'Deelnemers van Favor & Grace in gesprek met elkaar tijdens een dagbestedingsochtend.',
     imageSlot: 'Sfeerbeeld: deelnemers in gesprek',
   },
 
@@ -50,17 +50,17 @@ export const nl = {
     title: 'Niet iedereen voelt zich thuis binnen reguliere dagbesteding.',
     body: [
       'Taal, cultuur, herinneringen, eten en muziek bepalen of iemand zich werkelijk begrepen voelt. Ontbreken die vanzelfsprekendheden, dan wordt meedoen ineens ingewikkeld — en blijft iemand liever thuis.',
-      'Bij Favour & Grace zijn die elementen geen bijzaak, maar het uitgangspunt. Een gesprek in de eigen taal, een gerecht van vroeger, een lied dat iedereen kent: kleine dingen die het verschil maken tussen aanwezig zijn en erbij horen.',
+      'Bij Favor & Grace zijn die elementen geen bijzaak, maar het uitgangspunt. Een gesprek in de eigen taal, een gerecht van vroeger, een lied dat iedereen kent: kleine dingen die het verschil maken tussen aanwezig zijn en erbij horen.',
     ],
     pullQuote: 'Herkenning is geen extraatje. Het is de voorwaarde om mee te kunnen doen.',
     imageAlt:
-      'Deelnemers en begeleiders van Favour & Grace zitten samen rond een tafel.',
+      'Deelnemers en begeleiders van Favor & Grace zitten samen rond een tafel.',
     imageSlot: 'Breedbeeld: samen rond de tafel',
   },
 
   why: {
     eyebrow: 'Onze aanpak',
-    title: 'Waarom Favour & Grace?',
+    title: 'Waarom Favor & Grace?',
     lead: 'Vier uitgangspunten die iedere dag bepalen hoe wij mensen ontvangen.',
     items: [
       {
@@ -84,7 +84,7 @@ export const nl = {
 
   audience: {
     eyebrow: 'Voor wie',
-    title: 'Voor wie is Favour & Grace?',
+    title: 'Voor wie is Favor & Grace?',
     lead: 'Voor ouderen vanaf ongeveer 55 jaar die behoefte hebben aan gezelschap, ritme en een omgeving waarin zij zichzelf kunnen zijn. In het bijzonder voor mensen met een Caribische, Surinaamse, Afrikaanse of andere migratieachtergrond.',
     situationsTitle: 'Herkenbare situaties',
     situations: [
@@ -153,22 +153,22 @@ export const nl = {
     eyebrow: 'Het ontstaan',
     title: 'Ontstaan vanuit zorg, ervaring en een duidelijke missie.',
     body: [
-      'Favour & Grace is opgericht door Elisabeth. Jarenlang zorgde zij als mantelzorger voor ouderen in haar omgeving: voor haar oma, en voor haar vader tot aan zijn laatste momenten.',
+      'Favor & Grace is opgericht door Elisabeth. Jarenlang zorgde zij als mantelzorger voor ouderen in haar omgeving: voor haar oma, en voor haar vader tot aan zijn laatste momenten.',
       'Naast die persoonlijke zorg volgde zij een professionele opleiding in de zorg. Daar zag zij van dichtbij wat er gebeurt wanneer taal, cultuur en achtergrond geen plek krijgen: mensen haken af, trekken zich terug en verdwijnen langzaam uit beeld.',
-      'Uit die ervaring, en uit een sterke persoonlijke roeping, groeide Favour & Grace.',
+      'Uit die ervaring, en uit een sterke persoonlijke roeping, groeide Favor & Grace.',
     ],
     quote: 'Ik zag hoeveel verschil herkenning, aandacht en vertrouwdheid kunnen maken.',
-    quoteAttribution: 'Elisabeth, oprichter van Favour & Grace',
+    quoteAttribution: 'Elisabeth, oprichter van Favor & Grace',
     faithTitle: 'Over geloof',
     faithBody:
-      'Geloof staat aan de basis van Favour & Grace. Het bepaalt de houding waarmee wij mensen ontvangen — niet wie er welkom is. Iedereen is welkom, ongeacht achtergrond of overtuiging.',
-    imageAlt: 'Portret van Elisabeth, oprichter van Favour & Grace.',
+      'Geloof staat aan de basis van Favor & Grace. Het bepaalt de houding waarmee wij mensen ontvangen — niet wie er welkom is. Iedereen is welkom, ongeacht achtergrond of overtuiging.',
+    imageAlt: 'Portret van Elisabeth, oprichter van Favor & Grace.',
     imageSlot: 'Portret: Elisabeth',
   },
 
   gallery: {
     eyebrow: 'Momenten',
-    title: 'Dit is Favour & Grace.',
+    title: 'Dit is Favor & Grace.',
     lead: 'Beelden uit onze dagen: ontmoeting, samen eten, muziek en gezelschap.',
     items: [
       { alt: 'Deelnemers zitten samen te praten in de huiskamer.', slot: 'Samen in de huiskamer' },
@@ -182,7 +182,7 @@ export const nl = {
 
   referral: {
     eyebrow: 'Aanmelden en verwijzen',
-    title: 'Kent u iemand voor wie Favour & Grace passend kan zijn?',
+    title: 'Kent u iemand voor wie Favor & Grace passend kan zijn?',
     lead: 'Familie, mantelzorgers, wijkteams en zorgprofessionals kunnen rechtstreeks contact opnemen. Eén gesprek is vaak genoeg om te bepalen of het past.',
     stepsTitle: 'Zo gaat het in zijn werk',
     steps: [
@@ -204,7 +204,7 @@ export const nl = {
   },
 
   foundation: {
-    eyebrow: 'Stichting Favour & Grace',
+    eyebrow: 'Stichting Favor & Grace',
     title: 'Samen kunnen we meer betekenen.',
     lead: 'De vraag naar cultureel passende dagbesteding is groter dan wat altijd direct gefinancierd kan worden. De stichting maakt activiteiten, projecten en ondersteuning mogelijk voor mensen die daar zelf niet in kunnen voorzien.',
     paths: [
@@ -221,7 +221,7 @@ export const nl = {
       {
         title: 'Doneren',
         body: 'Een bijdrage maakt maaltijden, vervoer en activiteiten mogelijk voor deelnemers die dat zelf niet kunnen dragen.',
-        cta: 'Steun Favour & Grace',
+        cta: 'Steun Favor & Grace',
       },
     ],
     detailsTitle: 'Over de stichting',
@@ -249,7 +249,7 @@ export const nl = {
   finalCta: {
     title: 'Een plek waar mensen zich gezien, gehoord en thuis mogen voelen.',
     lead: 'Kom langs, stel uw vragen of bespreek vrijblijvend de mogelijkheden.',
-    primaryCta: 'Maak kennis met Favour & Grace',
+    primaryCta: 'Maak kennis met Favor & Grace',
     secondaryCta: 'Neem contact op',
   },
 
@@ -281,7 +281,7 @@ export const nl = {
         hint: 'Vertel kort om wie het gaat en waar u aan denkt. U hoeft geen medische details te delen.',
       },
       consent:
-        'Ik ga ermee akkoord dat Favour & Grace mijn gegevens gebruikt om contact met mij op te nemen.',
+        'Ik ga ermee akkoord dat Favor & Grace mijn gegevens gebruikt om contact met mij op te nemen.',
       submit: 'Versturen',
       required: 'verplicht',
       unavailableTitle: 'Het formulier is nog niet actief',
@@ -302,9 +302,9 @@ export const nl = {
     cookies: 'Cookiebeleid',
     terms: 'Algemene voorwaarden',
     separationNote:
-      'De dagbesteding en Stichting Favour & Grace zijn afzonderlijke organisaties met een gedeelde missie.',
+      'De dagbesteding en Stichting Favor & Grace zijn afzonderlijke organisaties met een gedeelde missie.',
     backToTop: 'Terug naar boven',
-    copyright: (year: number) => `© ${year} Favour & Grace. Alle rechten voorbehouden.`,
+    copyright: (year: number) => `© ${year} Favor & Grace. Alle rechten voorbehouden.`,
   },
 
   common: {

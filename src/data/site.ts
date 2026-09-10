@@ -1,5 +1,5 @@
 /**
- * Favour & Grace — central configuration.
+ * Favor & Grace — central configuration.
  *
  * This is the ONLY place where organisational facts live. Components read from
  * here and render conditionally: anything still `null` is simply not shown, so
@@ -49,14 +49,14 @@ export interface BoardMember {
 
 export const brand = {
   /**
-   * NOTE FOR THE CLIENT: the supplied logo reads "Favor & Grace" while the
-   * brief and all written communication use "Favour & Grace". The site uses
-   * the spelling below everywhere. Change this one value if the logo spelling
-   * should win instead.
+   * The organisation's name as it is written everywhere on the site, matching
+   * the spelling in the logo artwork. Change it here and it changes throughout:
+   * headings, metadata, structured data, the footer and the form's consent
+   * line all read it from this value.
    */
-  name: 'Favour & Grace',
-  nameParts: { first: 'Favour', connector: '&', second: 'Grace' },
-  foundationName: 'Stichting Favour & Grace',
+  name: 'Favor & Grace',
+  nameParts: { first: 'Favor', connector: '&', second: 'Grace' },
+  foundationName: 'Stichting Favor & Grace',
   tagline: 'De kracht van cultuursensitieve dagbesteding',
 
   /**
@@ -166,7 +166,7 @@ export const partners: Array<{
 
 /**
  * Copy that was written from the brief and is shown on the page, but still
- * needs a read-through by Favour & Grace. Nothing here is a factual claim
+ * needs a read-through by Favor & Grace. Nothing here is a factual claim
  * about certification, funding or partners — it is descriptive text about how
  * a day is spent and how a referral starts.
  *

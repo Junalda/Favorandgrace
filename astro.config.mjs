@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 // TODO: replace with the definitive production domain before launch.
-const SITE = 'https://www.favourandgrace.nl';
+const SITE = 'https://www.favorandgrace.nl';
 
 export default defineConfig({
   site: SITE,

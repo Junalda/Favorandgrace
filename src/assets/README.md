@@ -1,6 +1,6 @@
 # Photography
 
-Put real Favour & Grace photographs here, then import them in the component
+Put real Favor & Grace photographs here, then import them in the component
 that needs them. Files in this folder go through Astro's image pipeline: they
 are converted to WebP, resized into a srcset and given explicit dimensions, so
 they never cause layout shift.

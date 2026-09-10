@@ -1,6 +1,6 @@
-# Favour & Grace
+# Favor & Grace
 
-One-page website for Favour & Grace — culturally recognisable day activities
+One-page website for Favor & Grace — culturally recognisable day activities
 and social care for older adults, built with Astro and TypeScript.
 
 ## Run it
@@ -98,8 +98,7 @@ The header uses a horizontal lockup, emblem beside the script, rather than the
 supplied stacked arrangement. Stacked, the wordmark is illegible at the ~44px a
 header allows.
 
-**One thing to settle:** the logo artwork reads "Favor & Grace" while every
-line of copy on the site reads "Favour & Grace". That inconsistency is now
-visible on the page, since the logo sits directly above the text. Either the
-artwork or the copy should change. The copy side is a single value, `brand.name`
-in `src/data/site.ts`.
+The name is spelled "Favor & Grace" throughout, matching the logo artwork. It
+lives in one place, `brand.name` in `src/data/site.ts`, and flows from there
+into headings, metadata, structured data, the footer and the form's consent
+line.

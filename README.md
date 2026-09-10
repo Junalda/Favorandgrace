@@ -83,11 +83,23 @@ The site is built to run with placeholders, but these must be settled:
 | Contact form endpoint | `src/data/site.ts` → `contact.formEndpoint` |
 | KvK numbers, ANBI status, board, donation link | `src/data/site.ts` → `organisation` |
 | Privacy statement and cookie policy | `src/data/site.ts` → `legal` |
-| Logo artwork with a transparent background | `src/data/site.ts` → `brand.logo` |
-| Open Graph sharing image (1200×630) | `src/data/site.ts` → `brand.ogImage` |
 | Real photography | `src/assets/` |
 | Sign-off on the day-programme and referral copy | `src/data/site.ts` → `contentApproval` |
 
-Note the spelling: the supplied logo reads "Favor & Grace" while the brief and
-the site use "Favour & Grace". The site's spelling is a single value,
-`brand.name` in `src/data/site.ts`.
+### The logo
+
+The supplied logo was a JPEG on a photographic background. `tools/prepare-logo.py`
+cuts the artwork out of it and writes four assets: the header lockup, a
+transparent stacked version for print, the sharing card and the touch icon. Run
+it again if a better source arrives, or replace `src/assets/logo.png` directly
+if a vector version turns up — nothing else needs to change.
+
+The header uses a horizontal lockup, emblem beside the script, rather than the
+supplied stacked arrangement. Stacked, the wordmark is illegible at the ~44px a
+header allows.
+
+**One thing to settle:** the logo artwork reads "Favor & Grace" while every
+line of copy on the site reads "Favour & Grace". That inconsistency is now
+visible on the page, since the logo sits directly above the text. Either the
+artwork or the copy should change. The copy side is a single value, `brand.name`
+in `src/data/site.ts`.

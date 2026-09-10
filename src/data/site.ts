@@ -12,6 +12,9 @@
  * than an incorrect one, especially for legal, ANBI and referral information.
  */
 
+import type { ImageMetadata } from 'astro';
+import logo from '../assets/logo.png';
+
 /** A fact that has not been supplied yet. */
 export type Pending<T> = T | null;
 
@@ -57,16 +60,26 @@ export const brand = {
   tagline: 'De kracht van cultuursensitieve dagbesteding',
 
   /**
-   * [LOGO] — drop the supplied artwork in `public/images/` and point to it.
-   * A transparent SVG or PNG is strongly preferred over the JPG version, which
-   * carries a background and cannot sit on the site's cream ground.
-   * While this is `null` the header renders the typographic wordmark, which is
-   * intentionally a good-looking fallback rather than a broken image.
+   * The supplied logo, cut out of its photographic background by
+   * `tools/prepare-logo.py` so it sits on any ground.
+   *
+   * This is a horizontal lockup — emblem beside the script — because the
+   * supplied artwork is stacked, and a stacked logo is illegible at the ~44px a
+   * header allows. The stacked original, tagline included, is kept at
+   * `public/images/logo-full.png` for print and partner use.
+   *
+   * It is imported rather than referenced by path, so Astro resizes it, emits a
+   * 2x variant and writes explicit dimensions. Set this to `null` and the header
+   * falls back to the typographic wordmark, which is a designed fallback rather
+   * than a broken image.
+   *
+   * If a vector version ever arrives, replace `src/assets/logo.png` with it:
+   * nothing else needs to change.
    */
-  logo: null as Pending<{ src: string; width: number; height: number }>,
+  logo: logo as Pending<ImageMetadata>,
 
-  /** Open Graph / social sharing image. TODO: supply a 1200x630 brand image. */
-  ogImage: null as Pending<string>,
+  /** Open Graph / social sharing image: the full lockup on the cream ground. */
+  ogImage: '/images/og-image.jpg' as Pending<string>,
 } as const;
 
 /* -------------------------------------------------------------------------- */
